@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { PanelAdminComponent } from './layouts/panel-admin/panel-admin.component';
 import { DashboardComponent } from './admin/dashboard/dashboard.component';
-import { IndexComponent } from './admin/sales/rawmaterial/index/index.component';
+import { IndexComponent } from './admin/purchases/rawmaterial/index/index.component';
 
 
 
