@@ -1,0 +1,89 @@
+<!-- modal-create.component.html -->
+<div *ngIf="isOpen" class="fixed inset-0 z-50 flex items-center justify-center overflow-auto">
+  <div id="modalOverlay" class="fixed inset-0 bg-black opacity-80"></div>
+  <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+    <!-- Modal content -->
+    <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5 overflow-auto max-h-screen">
+      <!-- Modal header -->
+      <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
+        <button type="button" (click)="closeModal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <form [formGroup]="CreateForm">
+        <div class="grid gap-4 mb-4 sm:grid-cols-2">
+          <!-- Campo Date -->
+          <div>
+            <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+            <input formControlName="date" type="date" name="date" id="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Note Date" required>
+            <div *ngIf="date.invalid && (date.dirty || date.touched)" class="">
+              <div *ngIf="date.errors?.['required']" class="text-red-600 p-2">Date is required</div>
+            </div>
+          </div>
+          <!-- Campo Type -->
+          <div>
+            <label for="type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Type</label>
+            <input formControlName="type" type="text" name="type" id="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Note Type" required>
+            <div *ngIf="type.invalid && (type.dirty || type.touched)" class="">
+              <div *ngIf="type.errors?.['required']" class="text-red-600 p-2">Type is required</div>
+            </div>
+          </div>
+          <!-- Campo Total Amount -->
+          <div>
+            <label for="totalAmount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Amount</label>
+            <input formControlName="totalAmount" type="number" name="totalAmount" id="totalAmount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Total Amount" required>
+            <div *ngIf="totalAmount.invalid && (totalAmount.dirty || totalAmount.touched)" class="">
+              <div *ngIf="totalAmount.errors?.['required']" class="text-red-600 p-2">Total Amount is required</div>
+            </div>
+          </div>
+          <!-- Campo Store -->
+          <div>
+            <label for="store" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Store</label>
+            <select formControlName="store" id="store" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+              <option *ngFor="let store of stores" [ngValue]="store">{{ store.name }}</option>
+            </select>
+            <div *ngIf="store.invalid && (store.dirty || store.touched)" class="">
+              <div *ngIf="store.errors?.['required']" class="text-red-600 p-2">Store is required</div>
+            </div>
+          </div>
+        </div>
+        <!-- Campo Detail Notes -->
+        <div formArrayName="detailNotes">
+          <div *ngFor="let detail of detailNotes.controls; let i = index" [formGroupName]="i" class="grid gap-4 mb-4 sm:grid-cols-3">
+            <div>
+              <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+              <input formControlName="quantity" type="number" name="quantity" id="quantity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Quantity" required>
+              <div *ngIf="detail.get('quantity')!.invalid && (detail.get('quantity')!.dirty || detail.get('quantity')!.touched)" class="">
+                <div *ngIf="detail.get('quantity')!.errors?.['required']" class="text-red-600 p-2">Quantity is required</div>
+              </div>
+            </div>
+            <div>
+              <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+              <input formControlName="price" type="number" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Price" required>
+              <div *ngIf="detail.get('price')!.invalid && (detail.get('price')!.dirty! || detail.get('price')!.touched)" class="">
+                <div *ngIf="detail.get('price')!.errors?.['required']" class="text-red-600 p-2">Price is required</div>
+              </div>
+            </div>
+            <div>
+              <label for="rawMaterial" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Raw Material</label>
+              <select formControlName="rawMaterial" id="rawMaterial" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                <option *ngFor="let rawMaterial of rawMaterials" [ngValue]="rawMaterial">{{ rawMaterial.name }}</option>
+              </select>
+              <div *ngIf="detail.get('rawMaterial')!.invalid && (detail.get('rawMaterial')!.dirty || detail.get('rawMaterial')!.touched)" class="">
+                <div *ngIf="detail.get('rawMaterial')!.errors?.['required']" class="text-red-600 p-2">Raw Material is required</div>
+              </div>
+            </div>
+            <button type="button" (click)="removeDetailNote(i)" class="text-red-500 hover:text-red-700">Remove</button>
+          </div>
+          <button type="button" (click)="addDetailNote()" class="mt-2 text-blue-500 hover:text-blue-700">Add Detail Note</button>
+        </div>
+        <app-createbutton label="Save" (clicked)="onSave()"></app-createbutton>
+      </form>
+    </div>
+  </div>
+</div>

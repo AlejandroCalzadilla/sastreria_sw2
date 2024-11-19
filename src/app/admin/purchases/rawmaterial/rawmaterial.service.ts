@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +9,18 @@ import { Observable, tap } from 'rxjs';
 export class RawmaterialService {
 
   
-  private apiUrl = 'http://localhost:8761/graphql/raw-material'; // URL de tu API
+  private apiUrl = environment.apiUrl; // URL de tu API
+
 
   constructor(private http: HttpClient) { }
   // Cambia esto a la URL de tu servidor GraphQL
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
 
  
   findAllRawMaterials(limit: number, offset: number): Observable<any> {
@@ -26,7 +35,7 @@ export class RawmaterialService {
         }
       }`
     };
-    return this.http.post<any>(this.apiUrl, query);
+    return this.http.post<any>(this.apiUrl, query, { headers: this.getHeaders() });
   }
   
 
@@ -35,7 +44,7 @@ export class RawmaterialService {
     const query = {
       query: `mutation { createRawMaterial(name: "${rawMaterial.nombre}", unit: "${rawMaterial.unidad}") { id name unit } }`
     };
-    return this.http.post<any>(this.apiUrl, query).pipe(
+    return this.http.post<any>(this.apiUrl, query,{ headers: this.getHeaders() }).pipe(
       tap((response: any) => console.log('Respuesta del servidor:', response))
     );
   }
@@ -53,14 +62,14 @@ export class RawmaterialService {
         }
       }`
     };
-    return this.http.post<any>(this.apiUrl, query);
+    return this.http.post<any>(this.apiUrl, query,{ headers: this.getHeaders() });
   } 
 
   delete(id: string): Observable<any> {
     const query = {
       query: `mutation { deleteRawMaterial(id: "${id}") }`
     };
-    return this.http.post<any>(this.apiUrl, query).pipe(
+    return this.http.post<any>(this.apiUrl, query,{ headers: this.getHeaders() }).pipe(
       tap((response: any) => console.log('Respuesta del servidor:', response))
     );
   }

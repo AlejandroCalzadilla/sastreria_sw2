@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DashboardComponent } from "../../../dashboard/dashboard.component";
+
 import { PanelAdminComponent } from "../../../../layouts/panel-admin/panel-admin.component";
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,7 @@ import { FilterDropdownComponent } from '../../../../layouts/filter-dropdown/fil
 import { SearchComponent } from '../../../../layouts/search-component/search.component';
 import { ModaleditComponent } from '../modaledit/modaledit.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-index',
@@ -36,10 +37,18 @@ export class IndexComponent {
   searchTerm: string = '';
   filteredDatas: any[] = [];
 
+  private subscriptions: Subscription = new Subscription();
+
   constructor(private rawMaterialService: RawmaterialService) { }
   
   ngOnInit(): void {  this.loadData();  }
   
+
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
   loadData() {
     const offset = (this.currentPage - 1) * this.itemsPerPage;
     this.rawMaterialService.findAllRawMaterials(this.itemsPerPage, offset).subscribe((response: any) => {

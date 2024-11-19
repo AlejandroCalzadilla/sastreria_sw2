@@ -1,0 +1,82 @@
+<!-- modaledit.component.html -->
+<div *ngIf="isOpen" class="fixed inset-0 z-50 flex items-center justify-center overflow-auto">
+  <div id="modalOverlay" class="fixed inset-0 bg-black opacity-80"></div>
+  <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+    <!-- Modal content -->
+    <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+      <!-- Modal header -->
+      <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
+        <button type="button" (click)="closeModal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <form [formGroup]="EditForm">
+        <div class="grid gap-4 mb-4 sm:grid-cols-2">
+          <!-- Campo First Name -->
+          <div>
+            <label for="firstName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
+            <input formControlName="firstName" type="text" name="firstName" id="firstName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="First Name" required>
+            <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="">
+              <div *ngIf="firstName.errors?.['required']" class="text-red-600 p-2">First Name is required</div>
+            </div>
+          </div>
+          <!-- Campo Last Name -->
+          <div>
+            <label for="lastName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
+            <input formControlName="lastName" type="text" name="lastName" id="lastName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Last Name" required>
+            <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="">
+              <div *ngIf="lastName.errors?.['required']" class="text-red-600 p-2">Last Name is required</div>
+            </div>
+          </div>
+          <!-- Campo CI -->
+          <div>
+            <label for="ci" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">CI</label>
+            <input formControlName="ci" type="text" name="ci" id="ci" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="CI" required>
+            <div *ngIf="ci.invalid && (ci.dirty || ci.touched)" class="">
+              <div *ngIf="ci.errors?.['required']" class="text-red-600 p-2">CI is required</div>
+            </div>
+          </div>
+          <!-- Campo Birth Date -->
+          <div>
+            <label for="birthDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Birth Date</label>
+            <input formControlName="birthDate" type="date" name="birthDate" id="birthDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+            <div *ngIf="birthDate.invalid && (birthDate.dirty || birthDate.touched)" class="">
+              <div *ngIf="birthDate.errors?.['required']" class="text-red-600 p-2">Birth Date is required</div>
+            </div>
+          </div>
+          <!-- Campo Sex -->
+          <div>
+            <label for="sex" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sex</label>
+            <input formControlName="sex" type="text" name="sex" id="sex" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Sex" required>
+            <div *ngIf="sex.invalid && (sex.dirty || sex.touched)" class="">
+              <div *ngIf="sex.errors?.['required']" class="text-red-600 p-2">Sex is required</div>
+            </div>
+          </div>
+          <!-- Campo Telephones -->
+          <div formArrayName="telephones">
+            <div *ngFor="let phone of telephones.controls; let i = index" [formGroupName]="i">
+              <label for="number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
+              <input formControlName="number" type="text" name="number" id="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Phone Number" required>
+              <div *ngIf="phone.get('number')?.invalid && (phone.get('number')?.dirty || phone.get('number')?.touched)" class="">
+                <div *ngIf="phone.get('number')?.errors?.['required']" class="text-red-600 p-2">Phone Number is required</div>
+              </div>
+              <label for="type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Type</label>
+              <input formControlName="type" type="text" name="type" id="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Phone Type" required>
+              <div *ngIf="phone.get('type')?.invalid && (phone.get('type')?.dirty || phone.get('type')?.touched)" class="">
+                <div *ngIf="phone.get('type')?.errors?.['required']" class="text-red-600 p-2">Phone Type is required</div>
+              </div>
+              <button type="button" (click)="removeTelephone(i)" class="text-red-500 hover:text-red-700">Remove</button>
+            </div>
+            <button type="button" (click)="addTelephone()" class="mt-2 text-blue-500 hover:text-blue-700">Add Phone</button>
+          </div>
+        </div>
+        <app-createbutton label="Edit" (clicked)="onSave()"></app-createbutton>
+      </form>
+    </div>
+  </div>
+</div>

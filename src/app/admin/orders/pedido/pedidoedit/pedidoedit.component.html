@@ -1,0 +1,105 @@
+<!-- pedidoedit.component.html -->
+<div *ngIf="isOpen" class="fixed inset-0 z-50 flex items-center justify-center">
+    <div id="modalOverlay" class="fixed inset-0 bg-black opacity-80"></div>
+    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+      <!-- Modal content -->
+      <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+        <!-- Modal header -->
+        <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
+          <button type="button" (click)="closeModal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <form [formGroup]="EditForm">
+          <div class="grid gap-4 mb-4 sm:grid-cols-2">
+            <!-- Campo Customer ID -->
+            <div>
+              <label for="customerId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer</label>
+              <select formControlName="customerId" id="customerId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.firstName }} {{ customer.lastName }}</option>
+              </select>
+              <div *ngIf="customerId.invalid && (customerId.dirty || customerId.touched)" class="text-red-600 p-2">
+                <div *ngIf="customerId.errors?.['required']">Customer is required</div>
+              </div>
+            </div>
+            <!-- Campo Order Date -->
+            <div>
+              <label for="orderDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Order Date</label>
+              <input formControlName="orderDate" type="date" name="orderDate" id="orderDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Order Date" required>
+              <div *ngIf="orderDate.invalid && (orderDate.dirty || orderDate.touched)" class="text-red-600 p-2">
+                <div *ngIf="orderDate.errors?.['required']">Order Date is required</div>
+              </div>
+            </div>
+            <!-- Campo Status -->
+            <div>
+              <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+              <input formControlName="status" type="text" name="status" id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Status" required>
+              <div *ngIf="status.invalid && (status.dirty || status.touched)" class="text-red-600 p-2">
+                <div *ngIf="status.errors?.['required']">Status is required</div>
+              </div>
+            </div>
+            <!-- Campo Total Price -->
+            <div>
+              <label for="totalPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Price</label>
+              <input formControlName="totalPrice" type="number" name="totalPrice" id="totalPrice" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Total Price" required>
+              <div *ngIf="totalPrice.invalid && (totalPrice.dirty || totalPrice.touched)" class="text-red-600 p-2">
+                <div *ngIf="totalPrice.errors?.['required']">Total Price is required</div>
+              </div>
+            </div>
+            <!-- Campo Items -->
+            <div formArrayName="items">
+              <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="grid gap-4 mb-4 sm:grid-cols-2">
+                <div>
+                  <label for="garmentId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Garment</label>
+                  <select formControlName="garmentId" id="garmentId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    <option *ngFor="let garment of garments" [value]="garment.id">{{ garment.name }}</option>
+                  </select>
+                  <div *ngIf="item.get('garmentId')?.invalid && (item.get('garmentId')?.dirty || item.get('garmentId')?.touched)" class="text-red-600 p-2">
+                    <div *ngIf="item.get('garmentId')?.errors?.['required']">Garment is required</div>
+                  </div>
+                </div>
+                <div>
+                  <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Quantity</label>
+                  <input formControlName="quantity" type="number" name="quantity" id="quantity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Quantity" required>
+                  <div *ngIf="item.get('quantity')?.invalid && (item.get('quantity')?.dirty || item.get('quantity')?.touched)" class="text-red-600 p-2">
+                    <div *ngIf="item.get('quantity')?.errors?.['required']">Quantity is required</div>
+                  </div>
+                </div>
+                <div>
+                  <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+                  <input formControlName="price" type="number" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Price" required>
+                  <div *ngIf="item.get('price')?.invalid && (item.get('price')?.dirty || item.get('price')?.touched)" class="text-red-600 p-2">
+                    <div *ngIf="item.get('price')?.errors?.['required']">Price is required</div>
+                  </div>
+                </div>
+                <div>
+                  <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                  <input formControlName="status" type="text" name="status" id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Status" required>
+                  <div *ngIf="item.get('status')?.invalid && (item.get('status')?.dirty || item.get('status')?.touched)" class="text-red-600 p-2">
+                    <div *ngIf="item.get('status')?.errors?.['required']">Status is required</div>
+                  </div>
+                </div>
+                <div>
+                  <label for="measurementData" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Measurement Data</label>
+                  <input formControlName="measurementData" type="text" name="measurementData" id="measurementData" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Measurement Data" required>
+                  <div *ngIf="item.get('measurementData')?.invalid && (item.get('measurementData')?.dirty || item.get('measurementData')?.touched)" class="text-red-600 p-2">
+                    <div *ngIf="item.get('measurementData')?.errors?.['required']">Measurement Data is required</div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <button type="button" (click)="removeItem(i)" class="text-red-500 hover:text-red-700">Remove</button>
+                </div>
+              </div>
+              <button type="button" (click)="addItem()" class="mt-2 text-blue-500 hover:text-blue-700">Add Item</button>
+            </div>
+          </div>
+          <app-createbutton label="Save" (clicked)="onSave()"></app-createbutton>
+        </form>
+      </div>
+    </div>
+  </div>
